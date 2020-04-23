@@ -386,6 +386,34 @@ class Solution:
             nums[j] = 0
         return nums
 ```
+# LeetCode 322 零钱兑换 中等
+```python
+给定不同面额的硬币 coins 和一个总金额 amount。编写一个函数来计算可以凑成总金额所需的最少的硬币个数。如果没有任何一种硬币组合能组成总金额，返回 -1。
+示例 1:
+输入: coins = [1, 2, 5], amount = 11
+输出: 3 
+解释: 11 = 5 + 5 + 1
+示例 2:
+输入: coins = [2], amount = 3
+输出: -1
+
+# 自下而上的动态规划
+class Solution:
+    def coinChange(self, coins: List[int], amount: int) -> int:
+        result = [0]*(amount+1)
+        for i in range(1, amount+1):
+            tmp = []
+            for coin in coins:
+                if i-coin>=0 and result[i-coin]!=-1:
+                    tmp.append(result[i-coin]+1)
+            if len(tmp)>0:
+                result[i] = min(tmp)
+            else:
+                result[i] = -1
+        return result[amount]
+```
+
+
 # LeetCode 344 反转字符串
 ```python
 class Solution:
@@ -699,6 +727,39 @@ class Solution:
 ```
 
 
+# 面试题 08.11.硬币
+```python
+硬币。给定数量不限的硬币，币值为25分、10分、5分和1分，编写代码计算n分有几种表示法。(结果可能会很大，你需要将结果模上1000000007)
+示例1:
+输入: n = 5
+输出：2
+解释: 有两种方式可以凑成总金额:
+5=5
+5=1+1+1+1+1
+示例2:
+输入: n = 10
+输出：4
+解释: 有四种方式可以凑成总金额:
+10=10
+10=5+5
+10=5+1+1+1+1+1
+10=1+1+1+1+1+1+1+1+1+1
+说明：
+注意:
+你可以假设：
+0 <= n (总金额) <= 1000000
+
+class Solution:
+    def waysToChange(self, n: int) -> int:
+        if n == 0: return 0
+        if n == 1: return 1
+        result= [1]*(n+1)
+        for coin in [5, 10, 25]:
+            if coin<=n:
+                for i in range(coin, n+1):
+                    result[i] = result[i-coin] + result[i]
+        return result[n] % 1000000007
+```
 # 面试题 15 二进制中1的个数
 ```python
 
