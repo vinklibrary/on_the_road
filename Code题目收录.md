@@ -80,6 +80,85 @@ class Solution:
 ```
 
 
+# LeetCode 21 合并两个有序的链表
+```python
+21. 合并两个有序链表
+将两个升序链表合并为一个新的升序链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。 
+示例：
+输入：1->2->4, 1->3->4
+输出：1->1->2->3->4->4
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def mergeTwoLists(self, l1: ListNode, l2: ListNode) -> ListNode:
+        head = ListNode()
+        tmp = head
+        while l1 and l2:
+            if l1.val < l2.val:
+                tmp.next = l1 
+                l1 = l1.next
+            else:
+                tmp.next = l2
+                l2 = l2.next
+            tmp = tmp.next
+        if l1:
+            tmp.next = l1
+        else:
+            tmp.next = l2
+        return head.next
+```
+# LeetCode 23 合并K个有序的链表
+```python
+合并 k 个排序链表，返回合并后的排序链表。请分析和描述算法的复杂度。
+示例:
+输入:
+[
+  1->4->5,
+  1->3->4,
+  2->6
+]
+输出: 1->1->2->3->4->4->5->6
+
+# 采用了偷懒的方案，不断合并两个链表。 效率需要进行优化
+# Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.next = None
+
+class Solution:
+    def mergeTwoLists(self, l1: ListNode, l2: ListNode) -> ListNode:
+        head = ListNode()
+        tmp = head
+        while l1 and l2:
+            if l1.val < l2.val:
+                tmp.next = l1 
+                l1 = l1.next
+            else:
+                tmp.next = l2
+                l2 = l2.next
+            tmp = tmp.next
+        if l1:
+            tmp.next = l1
+        else:
+            tmp.next = l2
+        return head.next
+
+    def mergeKLists(self, lists: List[ListNode]) -> ListNode:
+        if len(lists)==1:
+            return lists[0]
+        if len(lists)==0:
+            return None
+        result = ListNode()
+        result.next = lists[0]
+        for i in range(0,len(lists)-1):
+            result.next = self.mergeTwoLists(result.next, lists[i+1])
+        return result.next
+```
 # LeetCode46 全排列
 
 
@@ -245,6 +324,23 @@ class Solution:
         for i in range(1,len(nums)):
             result = result ^ nums[i]
         return result
+```
+# LeetCode 137 只出现一次的数字II
+```python
+给定一个非空整数数组，除了某个元素只出现一次以外，其余每个元素均出现了三次。找出那个只出现了一次的元素。
+说明：
+你的算法应该具有线性时间复杂度。 你可以不使用额外空间来实现吗？
+示例 1:
+输入: [2,2,3,2]
+输出: 3
+示例 2:
+输入: [0,1,0,1,0,1,99]
+输出: 99
+
+class Solution:
+    def singleNumber(self, nums: List[int]) -> int:
+        return int((sum(set(nums))*6 - sum(nums)*2 )/ 4)
+    
 ```
 # LeetCode 169 多数元素 简单
 ```python
@@ -532,6 +628,34 @@ class Solution:
 ```
 
 
+# LeetCode 645 错误的集合
+```python
+集合 S 包含从1到 n 的整数。不幸的是，因为数据错误，导致集合里面某一个元素复制了成了集合里面的另外一个元素的值，导致集合丢失了一个整数并且有一个元素重复。
+给定一个数组 nums 代表了集合 S 发生错误后的结果。你的任务是首先寻找到重复出现的整数，再找到丢失的整数，将它们以数组的形式返回。
+示例 1:
+输入: nums = [1,2,2,4]
+输出: [2,3]
+注意:
+给定数组的长度范围是 [2, 10000]。
+给定的数组是无序的。
+
+class Solution:
+    def findErrorNums(self, nums: List[int]) -> List[int]:
+        num_dict = {}
+        for num in nums:
+            if num in num_dict:
+                double = num
+                break
+            else:
+                num_dict.setdefault(num, 0)
+        b = num - sum(nums) + sum([i for i in range(1,len(nums)+1)])
+        return [num, b]
+    
+
+
+```
+
+
 # LeetCode 709 转化成小写字母
 ```python
 class Solution:
@@ -770,4 +894,32 @@ class Solution:
             n = n&(n-1)
             count+=1
         return count
+```
+# 面试题56 - I. 数组中数字出现的次数
+```python
+一个整型数组 nums 里除两个数字之外，其他数字都出现了两次。请写程序找出这两个只出现一次的数字。要求时间复杂度是O(n)，空间复杂度是O(1)。
+示例 1：
+输入：nums = [4,1,4,6]
+输出：[1,6] 或 [6,1]
+示例 2：
+输入：nums = [1,2,10,4,1,4,3,3]
+输出：[2,10] 或 [10,2]
+限制：2 <= nums <= 10000
+
+class Solution:
+    def singleNumbers(self, nums: List[int]) -> List[int]:
+        result = nums[0]
+        for i in range(1, len(nums)):
+            result^=nums[i]
+        h = 1
+        while result & h == 0:
+            h = h<<1
+        a = 0
+        b = 0
+        for i in range(0, len(nums)):
+            if nums[i] & h == 0:
+                a ^= nums[i]
+            else:
+                b ^= nums[i]
+        return [a, b]
 ```
