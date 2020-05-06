@@ -257,6 +257,41 @@ class Solution:
 ```
 
 
+# LeetCode 98 验证二叉搜索树
+```python
+自己写的方法，只要验证中序遍历是递增的就好。 当前的中序遍历采用递归实现，最好的话可以改成不用递归实现的版本。
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution:
+    def __init__(self):
+        self.order_array = []
+
+    def isValidBST(self, root: TreeNode) -> bool:
+        self.pre_trav(root)
+        if len(self.order_array) == 0:
+            return True
+
+        for i in range(len(self.order_array)-1):
+            if self.order_array[i+1]<=self.order_array[i]:
+                return False
+        return True
+
+    def pre_trav(self, root: TreeNode):
+        if not root:
+            return
+        if root.left:
+            self.pre_trav(root.left)
+        self.order_array.append(root.val)
+        if root.right:
+            self.pre_trav(root.right)
+```
+
+
 # LeetCode 113 路径总和 II
 ```python
 给定一个二叉树和一个目标和，找到所有从根节点到叶子节点路径总和等于给定目标和的路径。
@@ -740,6 +775,38 @@ class Solution:
 ```
 
 
+# LeetCode 983 最低票价
+```python
+在一个火车旅行很受欢迎的国度，你提前一年计划了一些火车旅行。在接下来的一年里，你要旅行的日子将以一个名为 days 的数组给出。每一项是一个从 1 到 365 的整数。
+火车票有三种不同的销售方式：
+一张为期一天的通行证售价为 costs[0] 美元；
+一张为期七天的通行证售价为 costs[1] 美元；
+一张为期三十天的通行证售价为 costs[2] 美元。
+通行证允许数天无限制的旅行。 例如，如果我们在第 2 天获得一张为期 7 天的通行证，那么我们可以连着旅行 7 天：第 2 天、第 3 天、第 4 天、第 5 天、第 6 天、第 7 天和第 8 天。
+返回你想要完成在给定的列表 days 中列出的每一天的旅行所需要的最低消费。
+
+class Solution:
+    def mincostTickets(self, days: List[int], costs: List[int]) -> int:
+        mincost = [0 for i in range(366)]
+        if 366 in days:
+            mincost[366-1] = min(costs)
+        for i in range(1, 366):
+            if 366 - i in days:
+                tmp1 = costs[0] + mincost[366 - i]
+                if 366 - i + 6 >= 366:
+                    tmp2 = costs[1]
+                else:
+                    tmp2 = costs[1]+ mincost[366 - i + 6]
+                
+                if 366 - i + 29 >= 366:
+                    tmp3 = costs[2]
+                else:
+                    tmp3 = costs[2] + mincost[366 - i + 29]
+                mincost[366 - i -1] = min([tmp1, tmp2, tmp3])
+            else:
+                mincost[366 - i -1] = mincost[366 - i]
+        return mincost[0]
+```
 # Leetcode 1248 统计优美子数组
 ```python
 给你一个整数数组 nums 和一个整数 k。
